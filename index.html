@@ -1,0 +1,129 @@
+<!doctype html>
+<html>
+<head><title>VR Plugin Example</title></head>
+<style>
+#container {
+    margin: 0 auto;
+    width: 800px;
+}
+#header {
+    padding: 20px;
+}
+div h2 {
+    display: inline;
+}
+label {
+    float: right;
+}
+select {
+    float: right;
+}
+.example-description {
+  background-color: #ddd;
+  border: thin solid #333;
+  padding: 5px;
+}
+</style>
+<!-- only necessary for this page, optional for plugin -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+
+<link rel="stylesheet" href="libs/video-js-4.4.3/video-js.min.css">
+<script src="libs/video-js-4.4.3/video.js"></script>
+<script src="libs/three.min.js"></script>
+
+<!-- vr stuff is optional, must be after THREE is defined -->
+<script src="libs/vr/vr.js"></script>
+<script src="libs/vr/OculusRiftControls.js"></script>
+<script src="libs/vr/OculusRiftEffect.js"></script>
+
+<body>
+
+<div id="container">
+  <div id="header">
+      <h2><a href="https://github.com/slawrence/videojs-vr">videojs-vr</a></h2>
+      <select width='400' id='select-video'></select>
+  </div>
+  <video class="video-js vjs-default-skin" width="800" height="600" src="http://vids.ishallbereleased.com/bears.mp4" crossorigin="anonymous" data-setup="{}" controls></video>
+  <h3>Instructions and Requirements</h3>
+  <p>Click in the middle of the video to look around. Use dropdown at top right to change videos.</p>
+  <p>Requirements:</p>
+  <ul>
+      <li>Chrome</li>
+      <li>Webgl enabled</li>
+      <li>For Oculus support, install the <a href="https://github.com/benvanik/vr.js">vr.js</a> plugin</li>
+  </ul>
+  <p>Source (bears, manhattan, volcano, and moscow): <a href="http://www.airpano.com" title="AirPano.com • 360° Aerial Panorama • 3D Virtual Tours Around the World" target="_blank">AirPano.com</a></p>
+  <p>Source: <a href="http://github.com/slawrence/videojs-vr">github</a></p>
+</div>
+
+<script src="libs/videojs.vr.js"></script>
+
+<!--
+  video.js will automatically initialize the video element since it's loaded in
+  the head of the document but you still need to configure and initialize the
+  plugin.
+-->
+<script>
+    var vids = [
+        {
+            title: "bears",
+            sources: [{
+                    "type": "video/mp4",
+                    "src": "http://vids.ishallbereleased.com/bears.mp4"
+            }]
+        }, {
+            title: "manhattan",
+            sources: [{
+                    "type": "video/mp4",
+                    "src": "http://vids.ishallbereleased.com/manhattan.mp4"
+            }]
+        }, {
+            title: "volcano",
+            sources: [{
+                "type": "video/mp4",
+                "src": "http://vids.ishallbereleased.com/volcano.mp4"
+            }]
+        }, {
+            title: "moscow",
+            sources: [{
+                    "type": "video/mp4",
+                    "src": "http://vids.ishallbereleased.com/moscow.mp4"
+            }]
+        }, {
+            title: "sintel",
+            sources: [
+                {
+                    "type": "video/mp4",
+                    "src": "http://vids.ishallbereleased.com/sintel.mp4",
+                    "codecs": "avc1.42E01E, mp4a.40.2"
+                },{
+                    "type": "video/ogg",
+                    "src": "http://vids.ishallbereleased.com/sintel.ogv",
+                    "codecs": "theora, vorbis"
+                }
+            ],
+        }
+    ];
+  var select = $("#select-video");
+
+  vids.forEach(function (vid, i) {
+    $('<option />', {value: i, text: vid.title}).appendTo(select);
+  });
+
+  // save a reference to the video element
+  var video = document.querySelector('video');
+
+  // save a reference to the video.js player for that element
+  var player = videojs(video);
+
+  // initialize the plugin with some custom options:
+  player.vr({projection: "Sphere"});
+
+  select.on("change", function() {
+    var sel = select.val();
+    player.src(vids[sel].sources);
+    player.load();
+  });
+</script>
+</body>
+</html>
